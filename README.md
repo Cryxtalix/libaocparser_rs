@@ -2,7 +2,10 @@
 An AOC input parser for Rust
 
 ## Install
-
+Add this line to Cargo.toml under dependencies.
+```
+libaocparser_rs = { git = "https://github.com/Cryxtalix/libaocparser_rs" }
+```
 
 ## Usage
 Use `AocParser::new` to add input file.
