@@ -11,6 +11,7 @@ libaocparser_rs = { git = "https://github.com/Cryxtalix/libaocparser_rs" }
 Use `AocParser::new` to add input file.
 
 `AocParser::slice_as_type` to convert specific lines into a particular type.
+Type must implement `std::str::FromStr`.
 
 Example
 
