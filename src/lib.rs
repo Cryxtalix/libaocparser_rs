@@ -48,9 +48,33 @@ impl AocParser {
     }
 
     /// Converts several lines into a specific type
-    pub fn slice_as_type<T: FromStr>(&self, start: Option<usize>, end: Option<usize>) -> Result<Vec<T>, AocError> {
-        let start = start.unwrap_or(0);
-        let end = end.unwrap_or(self.size);
+    /// line_start and line_end are inclusive
+    /// line_start None for first line in file
+    /// line_end None for last line in file
+    pub fn slice_as_type<T: FromStr>(&self, line_start: Option<u32>, line_end: Option<u32>) -> Result<Vec<T>, AocError> {
+        // Convert line number to usize
+        let start: usize = {
+            if let Some(val) = line_start {
+                if val < 1 || val > self.size as u32 {
+                    return Err(AocError::OutOfBounds)
+                }
+                (val - 1) as usize
+            } else {
+                0
+            }
+        };
+        // Convert line number to usize
+        let end: usize = {
+            if let Some(val) = line_end {
+                if val < 1 || val > self.size as u32 {
+                    return Err(AocError::OutOfBounds)
+                }
+                val as usize
+            } else {
+                self.size
+            }
+        };
+        // Bounds check
         if start > end || end > self.size {
             return Err(AocError::OutOfBounds)
         }
@@ -89,7 +113,7 @@ mod tests {
             ],
             size: 6,
         };
-        let out: Vec<String> = input.slice_as_type(Some(1), Some(5)).unwrap();
+        let out: Vec<String> = input.slice_as_type(Some(2), Some(5)).unwrap();
         assert_eq!(out.len(), 4);
         assert_eq!(out[0], "5 6".to_string());
         assert_eq!(out[out.len()-1], "7442 78524".to_string());
