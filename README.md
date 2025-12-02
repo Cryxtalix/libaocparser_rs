@@ -8,7 +8,7 @@ libaocparser_rs = { git = "https://github.com/Cryxtalix/libaocparser_rs" }
 ```
 
 ## Usage
-Use `AocParser::new` to add input file.
+Use `AocParser::new` to add input file and separator.
 
 `AocParser::slice_as_type` to convert specific lines into a particular type.
 Type must implement `std::str::FromStr`.
@@ -16,7 +16,7 @@ Type must implement `std::str::FromStr`.
 **Example**
 
 ```
-use libaocparser_rs::AocParser;
+use libaocparser_rs::*;
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -51,7 +51,8 @@ impl FromStr for TestType {
 }
 
 fn main() {
-    let aoc = AocParser::new("inputs/day1/input.txt").unwrap();
+    let aoc = AocParser::new("inputs/day1/input.txt", Separator::Newline).unwrap();
+    // Parse lines 3 to line 6 (inclusive) into Vec<TestType>
     let test: Vec<TestType> = aoc.slice_as_type(Some(3), Some(6)).unwrap();
 
     assert_eq!(aoc.size, 250);

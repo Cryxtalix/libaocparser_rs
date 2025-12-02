@@ -14,6 +14,13 @@ use std::{
 };
 use errors::AocError;
 
+#[derive(PartialEq, Eq)]
+pub enum Separator {
+    Char(&'static str),
+    Whitespace,
+    Newline,
+}
+
 pub struct AocParser {
     original: String,
     pub data: Vec<String>,
@@ -23,12 +30,35 @@ pub struct AocParser {
 impl AocParser {
     /// Path to AOC input file
     /// Path starts at the project root
-    pub fn new<P: AsRef<Path>>(path: P) -> Result<Self, std::io::Error> {
+    pub fn new<P>(path: P, separator: Separator) -> Result<Self, AocError>
+    where 
+        P: AsRef<Path>,
+    {
         let contents = fs::read_to_string(path)?;
-        let data: Vec<String> = contents
-            .lines()
-            .map(String::from)
-            .collect();
+
+        let data: Vec<String> = {
+            match separator {
+                Separator::Newline => {
+                    contents
+                        .lines()
+                        .map(String::from)
+                        .collect()
+                },
+                Separator::Whitespace => {
+                    contents
+                        .split_whitespace()
+                        .map(String::from)
+                        .collect()
+                },
+                Separator::Char(pat) => {
+                    contents
+                        .split(pat)
+                        .map(String::from)
+                        .collect()
+                }
+            }
+        };
+
         let size = data.len();
         Ok(Self {
             original: contents,
@@ -95,8 +125,11 @@ mod tests {
 
     #[test]
     fn test_new() {
-        let aoc = AocParser::new(".test/input.txt").unwrap();
+        let aoc = AocParser::new(".test/input.txt", Separator::Newline).unwrap();
         assert_eq!(aoc.data.len(), 16);
+
+        let aoc = AocParser::new(".test/input_1.txt", Separator::Char(", ")).unwrap();
+        assert_eq!(aoc.data.len(), 6);
     }
 
     #[test]
