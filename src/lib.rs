@@ -16,7 +16,7 @@ use errors::AocError;
 
 #[derive(PartialEq, Eq)]
 pub enum Separator {
-    Char(&'static str),
+    Str(&'static str),
     Whitespace,
     Newline,
 }
@@ -50,7 +50,7 @@ impl AocParser {
                         .map(String::from)
                         .collect()
                 },
-                Separator::Char(pat) => {
+                Separator::Str(pat) => {
                     contents
                         .split(pat)
                         .map(String::from)
@@ -128,7 +128,7 @@ mod tests {
         let aoc = AocParser::new(".test/input.txt", Separator::Newline).unwrap();
         assert_eq!(aoc.data.len(), 16);
 
-        let aoc = AocParser::new(".test/input_1.txt", Separator::Char(", ")).unwrap();
+        let aoc = AocParser::new(".test/input_1.txt", Separator::Str(", ")).unwrap();
         assert_eq!(aoc.data.len(), 6);
     }
 
