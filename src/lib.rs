@@ -53,7 +53,7 @@ impl AocParser {
                 Separator::Str(pat) => {
                     contents
                         .split(pat)
-                        .map(String::from)
+                        .map(|s| String::from(s.trim()))
                         .collect()
                 }
             }
